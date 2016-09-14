@@ -22,8 +22,6 @@ disable_compilers() {
     chmod 000 /usr/bin/*c++
     chmod 000 /usr/bin/*g++
     # 755 to bring them back online
-    # It is better to restrict access to them
-    # unless you are working with a specific one
 }
 
 kernel_tuning() {
