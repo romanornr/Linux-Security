@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# forked version of SecureIPtables.sh with modifications
 # You need to Chmod this script before you run it.                 
 # sudo chmod 777 SecureIPtables.sh                                 
 # sudo chmod +x SecureIPtables.sh 
