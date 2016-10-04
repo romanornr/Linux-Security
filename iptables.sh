@@ -25,11 +25,11 @@ TCPBurstEst=100
 #TCPBurstEst:  of Packets an existing connection can send in 1 request.
 
 # Extra Ports to be Bi-Directionally Opened (TCP) 
-ExtraOne="false"
-ExtraOneP=8888
+ExtraOne="yes"
+ExtraOneP=8080
 
-ExtraTwo="false"
-ExtraTwoP=28018
+ExtraTwo="yes"
+ExtraTwoP=6379
 
 ExtraThree="false"
 ExtraThreeP=0
@@ -278,7 +278,7 @@ sleep 1
 echo "Done Opening Ports For Web Access!"
 
 echo "Lastly we block ALL OTHER INPUT TRAFFIC."
-sudo iptables -A INPUT -j REJECT
+#sudo iptables -A INPUT -j REJECT
 
 sleep 1
 echo "Done!"
@@ -360,7 +360,7 @@ echo "Done!"
 
 echo "Rejecting all other Output traffic"
 
-iptables -A OUTPUT -j REJECT
+#iptables -A OUTPUT -j REJECT
 
 sleep 1
 echo "Done!"
