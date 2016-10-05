@@ -367,7 +367,7 @@ echo "Done!"
 
 echo "Rejecting all Forwarding traffic"
 
-iptables -A FORWARD -j REJECT
+#iptables -A FORWARD -j REJECT
 
 # whitelist CloudFlare IP
 echo "whitelisting cloudflare IP's"
