@@ -60,7 +60,7 @@ kernel_tuning() {
           Would you like to do so?"
     select yn in "Yes" "No"; do
         case $yn in
-            Yes ) ; sysctl net.ipv6.conf.all.disable_ipv6=1 && \
+            Yes )   sysctl net.ipv6.conf.all.disable_ipv6=1 && \
                     sysctl net.ipv6.conf.default.disable_ipv6=1 && \
                     sysctl net.ipv6.conf.lo.disable_ipv6=1
             break;;
@@ -72,7 +72,7 @@ kernel_tuning() {
     sysctl -w net.ipv4.conf.all.accept_redirects=0
     sysctl -w net.ipv6.conf.all.accept_redirects=0
     sysctl -w net.ipv4.conf.all.send_redirects=0
-    sysctl -w net.ipv4.conf.default.accept_redirects = 0
+    sysctl -w net.ipv4.conf.default.accept_redirects=0
     # disables the magic-sysrq key
     sysctl kernel.sysrq=0
 
@@ -89,23 +89,23 @@ kernel_tuning() {
     sysctl -p
 }
 
-mount_options {
+mount_options () {
   #set up corresponding mount options to /tmp /var/log/*
   grep "[[:space:]]/tmp[[:space:]]" /etc/fstab | grep nodev | grep ^[^\#] || sed -i 's"^\(.*\s/tmp\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nodev\2"g' /etc/fstab
   grep "[[:space:]]/tmp[[:space:]]" /etc/fstab | grep nosuid | grep ^[^\#] || sed -i 's"^\(.*\s/tmp\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nosuid\2"g' /etc/fstab
   grep "[[:space:]]/tmp[[:space:]]" /etc/fstab | grep noexec | grep ^[^\#] || sed -i 's"^\(.*\s/tmp\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,noexec\2"g' /etc/fstab
   mount -o remount,noexec,nodev,nosuid /tmp
 
-  grep "[[:space:]]/var/log[[:space:]]" /etc/fstab | grep nodev | grep ^[^#] || sed -i 's"^\(.*\s/var/log\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nodev\2"g' /etc/fstab
-  grep "[[:space:]]/var/log[[:space:]]" /etc/fstab | grep nosuid | grep ^[^#] || sed -i 's"^\(.*\s/tmp\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nosuid\2"g' /etc/fstab
-  grep "[[:space:]]/var/log[[:space:]]" /etc/fstab | grep noexec | grep ^[^#] || sed -i 's"^\(.*\s/var/log\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,noexec\2"g' /etc/fstab
+  grep "[[:space:]]/var/log[[:space:]]" /etc/fstab | grep nodev | grep ^[^\#] || sed -i 's"^\(.*\s/var/log\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nodev\2"g' /etc/fstab
+  grep "[[:space:]]/var/log[[:space:]]" /etc/fstab | grep nosuid | grep ^[^\#] || sed -i 's"^\(.*\s/tmp\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nosuid\2"g' /etc/fstab
+  grep "[[:space:]]/var/log[[:space:]]" /etc/fstab | grep noexec | grep ^[^\#] || sed -i 's"^\(.*\s/var/log\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,noexec\2"g' /etc/fstab
   mount -o remount,noexec,nodev,nosuid /var/log
-  grep "[[:space:]]/var/log/audit[[:space:]]" /etc/fstab | grep nodev | grep ^[^#] || sed -i 's"^\(.*\s/var/log/audit\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nodev\2"g' /etc/fstab
-  grep "[[:space:]]/var/log/audit[[:space:]]" /etc/fstab | grep nosuid | grep ^[^#] || sed -i 's"^\(.*\s/var/log/audit\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nosuid\2"g' /etc/fstab
-  grep "[[:space:]]/var/log/audit[[:space:]]" /etc/fstab | grep noexec | grep ^[^#] || sed -i 's"^\(.*\s/var/log/audit\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,noexec\2"g' /etc/fstab
+  grep "[[:space:]]/var/log/audit[[:space:]]" /etc/fstab | grep nodev | grep ^[^\#] || sed -i 's"^\(.*\s/var/log/audit\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nodev\2"g' /etc/fstab
+  grep "[[:space:]]/var/log/audit[[:space:]]" /etc/fstab | grep nosuid | grep ^[^\#] || sed -i 's"^\(.*\s/var/log/audit\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nosuid\2"g' /etc/fstab
+  grep "[[:space:]]/var/log/audit[[:space:]]" /etc/fstab | grep noexec | grep ^[^\#] || sed -i 's"^\(.*\s/var/log/audit\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,noexec\2"g' /etc/fstab
   mount -o remount,noexec,nodev,nosuid /var/log/audit
 
-  grep "[[:space:]]/home[[:space:]]" /etc/fstab | grep nodev  | grep ^[^#] || sed -i 's"^\(.*\s/home\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nodev\2"g' /etc/fstab
+  grep "[[:space:]]/home[[:space:]]" /etc/fstab | grep nodev  | grep ^[^\#] || sed -i 's"^\(.*\s/home\s\+\w\+\s\+[a-zA-Z0-9,]\+\)\(\s.*\)$"\1,nodev\2"g' /etc/fstab
   mount -o remount,nodev /home
 }
 
