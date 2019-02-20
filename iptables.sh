@@ -1,10 +1,10 @@
 #!/bin/sh
 # forked version of SecureIPtables.sh with modifications
-# You need to Chmod this script before you run it.                 
-# sudo chmod 777 SecureIPtables.sh                                 
-# sudo chmod +x SecureIPtables.sh 
-# Run with sudo to get full benefits                             
-# 80, 25, 53, 443 and 22 open by Default, Can  be changed below.   
+# You need to Chmod this script before you run it.
+# sudo chmod 777 SecureIPtables.sh
+# sudo chmod +x SecureIPtables.sh
+# Run with sudo to get full benefits
+# 80, 25, 53, 443 and 22 open by Default, Can  be changed below.
 
 # ubuntu pernament rules
 #sudo apt-get install iptables-persistent
@@ -15,21 +15,23 @@ WEB=80
 MAIL=25
 DNS=53
 SSL=443
-SSH=22
+SSH=9560
+BNODE=8333
+TOR=9050
 
-#TCPBurstNew: of Packets a new connection can send in 1 request  
+#TCPBurstNew: of Packets a new connection can send in 1 request
 
 TCPBurstNew=400
 TCPBurstEst=100
 
 #TCPBurstEst:  of Packets an existing connection can send in 1 request.
 
-# Extra Ports to be Bi-Directionally Opened (TCP) 
+# Extra Ports to be Bi-Directionally Opened (TCP)
 ExtraOne="yes"
-ExtraOneP=8080
+ExtraOneP=8282
 
 ExtraTwo="yes"
-ExtraTwoP=6379
+ExtraTwoP=8383
 
 ExtraThree="false"
 ExtraThreeP=0
@@ -38,16 +40,19 @@ echo "This script is planning on configuring IPTables on your behalf"
 sleep 0.2
 echo "The following ports are being configured"
 sleep 0.2
-echo "Your SSH Port will be: $SSH"
+echo "Your \"SSH Port\" will be: $SSH"
 sleep 0.2
-echo "Your DNS Port will be: $DNS"
+echo "Your \"DNS Port\" will be: $DNS"
 sleep 0.2
-echo "Your SSL Port will be: $SSL"
+echo "Your \"SSL Port\" will be: $SSL"
 sleep 0.2
-echo "Your MAIL Services SMTP Port will be: $MAIL"
+echo "Your \"MAIL Services SMTP Port\" will be: $MAIL"
 sleep 0.2
-echo "Your WEB SERVER port will be: $WEB"
+echo "Your \"WEB SERVER\" port will be: $WEB"
 sleep 0.2
+echo "Your \"BITCOIN CORE node port\" will be : $BNODE"
+sleep 0.2
+echo "Your \"TOR port will be\" : $TOR"
 echo "If these are not correct, Please press Ctrl + C NOW and edit with a Text Editor"
 
 
@@ -172,11 +177,11 @@ sleep 1
 echo "Done!"
 echo "Next we drop VALID but INCOMPLETE packets. (Idk why this is even possible)"
 
-sudo iptables -A INPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP 
-sudo iptables -A INPUT -p tcp -m tcp --tcp-flags FIN,SYN FIN,SYN -j DROP 
-sudo iptables -A INPUT -p tcp -m tcp --tcp-flags SYN,RST SYN,RST -j DROP 
-sudo iptables -A INPUT -p tcp -m tcp --tcp-flags FIN,RST FIN,RST -j DROP 
-sudo iptables -A INPUT -p tcp -m tcp --tcp-flags FIN,ACK FIN -j DROP 
+sudo iptables -A INPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
+sudo iptables -A INPUT -p tcp -m tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
+sudo iptables -A INPUT -p tcp -m tcp --tcp-flags SYN,RST SYN,RST -j DROP
+sudo iptables -A INPUT -p tcp -m tcp --tcp-flags FIN,RST FIN,RST -j DROP
+sudo iptables -A INPUT -p tcp -m tcp --tcp-flags FIN,ACK FIN -j DROP
 sudo iptables -A INPUT -p tcp -m tcp --tcp-flags ACK,URG URG -j DROP
 
 sleep 1
@@ -246,6 +251,18 @@ echo "Done!"
 
 echo "SSH Port $SSH"
 sudo iptables -A INPUT -p tcp -m tcp --dport $SSH -j ACCEPT
+
+sleep 1
+echo "Done!"
+
+echo "BITCOIN CORE node Port $BNODE"
+sudo iptables -A INPUT -p tcp -m tcp --dport $BNODE -j ACCEPT
+
+sleep 1
+echo "Done!"
+
+echo "TOR Port $TOR"
+sudo iptables -A INPUT -p tcp -m tcp --dport $TOR -j ACCEPT
 
 sleep 1
 echo "Done!"
@@ -324,6 +341,16 @@ iptables -A OUTPUT -p tcp -m tcp --dport $SSH -j ACCEPT
 
 sleep 2
 
+echo "SSH Port $BNODE"
+iptables -A OUTPUT -p tcp -m tcp --dport $BNODE -j ACCEPT
+
+sleep 2
+
+echo "SSH Port $TOR"
+iptables -A OUTPUT -p tcp -m tcp --dport $TOR -j ACCEPT
+
+sleep 2
+
 if [ "$ExtraOne" = "yes" ]
 then
    echo "Extra Port One Opened: $ExtraOneP"
@@ -371,7 +398,7 @@ echo "Rejecting all Forwarding traffic"
 
 # whitelist CloudFlare IP
 echo "whitelisting cloudflare IP's"
-iptables -I INPUT -p tcp -m multiport --dports http,https -s "103.21.244.0/22" -j ACCEPT
+iptables -I INPUT -p tcp -m multiport --dports http,https -s "45.76.35.212" -j ACCEPT
 sleep 2
 iptables -I INPUT -p tcp -m multiport --dports http,https -s "103.22.200.0/22" -j ACCEPT
 sleep 2
@@ -401,6 +428,7 @@ iptables -I INPUT -p tcp -m multiport --dports http,https -s "198.41.128.0/17" -
 sleep 2
 iptables -I INPUT -p tcp -m multiport --dports http,https -s "199.27.128.0/21" -j ACCEPT
 sleep 1
+iptables -I INPUT -p tcp -m multiport --dports
 sleep 1
 echo "Done!"
 sleep 3
