@@ -400,7 +400,7 @@ echo "Rejecting all Forwarding traffic"
 echo "whitelisting cloudflare IP's"
 iptables -I INPUT -p tcp -m multiport --dports http,https -s "45.76.35.212" -j ACCEPT
 sleep 2
-iptables -I INPUT -p tcp -m multiport --dports http,https -s "103.22.200.0/22" -j ACCEPT
+iptables -I INPUT -p tcp -m multiport --dports http,https -s "212.47.228.136" -j ACCEPT
 sleep 2
 iptables -I INPUT -p tcp -m multiport --dports http,https -s "103.31.4.0/22" -j ACCEPT
 sleep 2
